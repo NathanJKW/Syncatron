@@ -1,41 +1,55 @@
+import sched
+import threading
 import time
 import logging
 from typing import List
-from get_env import load_environment_variables
+from src.get_env import load_environment_variables
 
-# Setup logging configuration investigate proper logging
-#logging.basicConfig(
-#    filename='git_pull.log',
-#    level=logging.INFO,
-#    format='%(asctime)s - %(levelname)s - %(message)s'
-#)
+# Setup logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# Create a scheduler instance
+scheduler = sched.scheduler(time.time, time.sleep)
 
-def main(interval: int, access_token: str, directories: List[str]) -> None:
+# Define a scheduled task that logs every 5 seconds
+def log_scheduled_task():
+    """Logs the scheduled task execution."""
+    logging.info("Scheduled task executed.")
+    # Schedule the next execution after 5 seconds
+    scheduler.enter(5, 1, log_scheduled_task)
+
+# Start the scheduler in a separate thread
+def start_scheduler(run_frequency: int) -> None:
+    """Starts the scheduler with the given run frequency."""
+    scheduler.enter(run_frequency, 1, log_scheduled_task)  # Initial call to schedule
+    scheduler.run()
+
+def main(should_run: bool = True) -> None:
     """
     Main function that orchestrates the program.
 
     Args:
-        interval (int): The interval in seconds between each execution.
-        access_token (str): Personal access token for authentication.
-        directories (List[str]): List of directory paths to perform git pull on.
+        should_run (bool): A flag to indicate whether the loop should continue running.
     """
     # Load environment variables
     run_frequency, project_folder, access_key = load_environment_variables()
     
     # Using the loaded environment variables
-    logger.info(f"Run Frequency: {run_frequency}")
-    logger.info(f"Project Folder: {project_folder}")
-    logger.info(f"Git Access Key: {access_key}")
+    logging.info(f"Run Frequency: {run_frequency}")
+    logging.info(f"Project Folder: {project_folder}")
+    logging.info(f"Git Access Key: {access_key}")
+    
+    # Start the scheduler thread
+    scheduler_thread = threading.Thread(target=start_scheduler, args=(run_frequency,))
+    scheduler_thread.start()
 
-
-    # todo - implement the main function with a scheduler
     try:
-        while True:
-            logging.info(f"Executing pull_repositories at interval of {interval} seconds.")
-            time.sleep(interval)
-            logging.info(f"Interval of {interval} seconds has elapsed. Re-executing.")
+        while should_run:
+            # Allow other operations to run
+            logging.info(f"Executing pull_repositories at interval of {10} seconds.")
+            time.sleep(10)
     except KeyboardInterrupt:
         logging.info("Program interrupted. Exiting gracefully.")
+
+if __name__ == "__main__":
+    main()
