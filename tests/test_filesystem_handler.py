@@ -1,7 +1,7 @@
 import unittest
 import os
 import tempfile
-from src.sync_handler import scan_for_git_repos
+from src.filesystem_handler import scan_for_git_repos
 
 class TestScanForGitRepos(unittest.TestCase):
 
