@@ -11,16 +11,16 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 # Create a scheduler instance to manage timed tasks
 scheduler = sched.scheduler(time.time, time.sleep)
 
-def log_scheduled_task():
+def log_scheduled_task(run_frequency: int) -> None:
     """Logs the scheduled task execution and sets up the next execution."""
     logging.info("Scheduled task executed.")
-    # Schedule the next execution of this task for 5 seconds later
-    scheduler.enter(5, 1, log_scheduled_task)
+    # Schedule the next execution of this task for 'run_frequency' seconds later
+    scheduler.enter(run_frequency, 1, log_scheduled_task, argument=(run_frequency,))
 
 def start_scheduler(run_frequency: int, stop_event: threading.Event) -> None:
     """Starts the scheduler with the specified run frequency."""
     # Initial call to schedule the first task
-    scheduler.enter(run_frequency, 1, log_scheduled_task)
+    scheduler.enter(run_frequency, 1, log_scheduled_task, argument=(run_frequency,))
     # Continuously run the scheduler until the stop_event is triggered
     while not stop_event.is_set():
         scheduler.run(blocking=False)
