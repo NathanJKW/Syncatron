@@ -1,37 +1,41 @@
 import subprocess
-import docker
+import logging
+import sys
 
-class DockerHandler:
-    def __init__(self, compose_file_path):
-        self.compose_file_path = compose_file_path
-        self.client = docker.from_env()
+# Set up logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-    def _run_compose_command(self, command):
-        """Run a docker-compose command and return the output."""
-        try:
-            result = subprocess.run(
-                ["docker-compose", "-f", self.compose_file_path] + command,
-                capture_output=True,
-                text=True,
-                check=True
-            )
-            return result.stdout
-        except subprocess.CalledProcessError as e:
-            return f"Error: {e.stderr}"  # Return error output if command fails
+def run_command(command):
+    """Run a shell command and return the output, error (if any), and exit status.
+    
+    Args:
+        command (str): The command to be executed.
 
-    def build(self):
-        """Build docker-compose images."""
-        return self._run_compose_command(["build"])
+    Returns:
+        tuple: A tuple containing the output, error, and exit code.
+    
+    Raises:
+        ValueError: If the command is empty.
+    """
+    
+    if not command:
+        raise ValueError("Command cannot be empty")
+    
+    logging.info(f"Running command: {command}")
 
-    def start(self):
-        """Start docker-compose services."""
-        return self._run_compose_command(["up", "-d"])
+    try:
+        # Running the command and capturing output & error
+        result = subprocess.run(command, shell=True, text=True, capture_output=True)
 
-    def stop(self):
-        """Stop docker-compose services."""
-        return self._run_compose_command(["down"])
+        # Logging the output and error
+        if result.stdout:
+            logging.info(f"Output:\n{result.stdout}")
+        
+        if result.stderr:
+            logging.error(f"Error:\n{result.stderr}")
 
-    def list_running_containers(self):
-        """List currently running containers."""
-        containers = self.client.containers.list()
-        return [container.name for container in containers]
+        return result.stdout, result.stderr, result.returncode
+
+    except Exception as e:
+        logging.error(f"An exception occurred: {str(e)}")
+        return None, str(e), -1
