@@ -43,7 +43,7 @@ def teardown_container(path: str) -> bool:
     try:
         docker_compose_file = get_docker_compose_file(path)
 
-        command = f"docker compose -f {docker_compose_file} down"
+        command = f"docker compose -f \"{docker_compose_file}\" down"
         output, error, exit_code = run_command(command)
 
         if exit_code == 0:
@@ -68,7 +68,7 @@ def rebuild_container(path: str) -> bool:
     try:
         docker_compose_file = get_docker_compose_file(path)
 
-        command = f"docker compose -f {docker_compose_file} build --no-cache"
+        command = f"docker compose -f \"{docker_compose_file}\" build --no-cache"
         output, error, exit_code = run_command(command)
 
         if exit_code == 0:
@@ -93,7 +93,7 @@ def start_container(path: str) -> bool:
     try:
         docker_compose_file = get_docker_compose_file(path)
 
-        command = f"docker compose -f {docker_compose_file} up -d"
+        command = f"docker compose -f \"{docker_compose_file}\" up -d"
         output, error, exit_code = run_command(command)
 
         if exit_code == 0:

@@ -6,7 +6,7 @@ from typing import List, Optional
 from src.get_env import load_environment_variables
 from src.filesystem_handler import scan_for_git_repos
 from src.git_handler import pull_repositories
-#from src.docker_handler import 
+from src.docker_handler import handle_docker_operations
 
 # Setup logging with a specified level and format
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -24,10 +24,11 @@ def log_scheduled_task(run_frequency: int, project_folder: str, access_key: str)
     
     if len(updated_repos) == 0:
         logging.info("No git repositories with changes. Skipping Docker container rebuild.")
-        scheduler.enter(run_frequency, 1, log_scheduled_task, argument=(run_frequency, project_folder, access_key))
-    
-    logging.info(f"{updated_repos.__len__()} git repositories with changes. Rebuilding Docker containers.")
-    #build_docker_images(updated_repos)
+    else:   
+        logging.info(f"{updated_repos.__len__()} git repositories with changes. Rebuilding Docker containers.")
+        for repo in updated_repos:
+            # Handle Docker operations here
+            handle_docker_operations(repo)
     
     scheduler.enter(run_frequency, 1, log_scheduled_task, argument=(run_frequency, project_folder, access_key))
 
@@ -70,14 +71,13 @@ def main(should_run: bool = True, run_frequency: Optional[int] = None,
             time.sleep(10)
     except KeyboardInterrupt:
         # Signal to stop the scheduler thread on a keyboard interrupt
-        stop_event.set()
         logging.info("Program interrupted. Exiting gracefully.")
     except Exception as e:
         # Signal to stop the scheduler thread on a keyboard interrupt
-        stop_event.set()
         logging.error(f"An exception occurred: {str(e)}")
     finally:
         # Wait for the scheduler thread to finish gracefully
+        stop_event.set()
         scheduler_thread.join()
         logging.info("Scheduler stopped. Exiting gracefully.")
 
