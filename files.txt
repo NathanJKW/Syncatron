@@ -1,6 +1,15 @@
 src/docker_handler.py
+src/filesystem_handler.py
+src/get_env.py
 src/git_handler.py
 src/main.py
-src/sync_handler.py
 src/telegram_handler.py
 src/utils.py
+tests/test_docker_handler.py
+tests/test_filesystem_handler.py
+tests/test_get_env.py
+tests/test_git_handler.py
+tests/test_main.py
+tests/test_telegram_handler.py
+tests/test_utils.py
+syncatron.py
