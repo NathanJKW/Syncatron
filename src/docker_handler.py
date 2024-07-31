@@ -140,8 +140,8 @@ def run_command(command: str):
     logging.info(f"Running command: {command}")
 
     try:
-        # Running the command and capturing output & error
-        result = subprocess.run(command, shell=True, text=True, capture_output=True)
+        # Running the command and capturing output & error with explicit encoding
+        result = subprocess.run(command, shell=True, text=True, capture_output=True, encoding='utf-8', errors='replace')
 
         # Logging the output and error
         if result.stdout:
