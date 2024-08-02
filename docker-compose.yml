@@ -1,0 +1,19 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - C:/Users/Nathan/Desktop/Python/:/app/projects               # Mount the entire project folder
+    environment:
+      PROJECT_FOLDER: "/app/projects"  # Load from the .env file
+      GIT_ACCESS_KEY: ""  # Load from the .env file
+      RUN_FREQUENCY: 10      # Load from the .env file
+    restart: unless-stopped
+    ports:
+      - "8000:8000"  # Expose any required ports here
+    networks:
+      - app-network  # Define networks 
+
+networks:
+  app-network:      # Custom network to secure service communications

@@ -8,10 +8,10 @@ if __name__ == "__main__":
     
     # Set up argument parsing
     parser = argparse.ArgumentParser(description='Run the repository puller script.')
-    parser.add_argument('--rf', type=int, help='Run frequency in seconds.')
-    parser.add_argument('--pf', type=str, help='Path to the project folder.')
-    parser.add_argument('--ak', type=str, help='Access key for git operations.')
-    parser.add_argument('--sr', type=bool, default=True, help='Indicates whether to keep running.')
+    parser.add_argument('--rf', type=int, default=None, help='Run frequency in seconds. Default is 5 seconds.')
+    parser.add_argument('--pf', type=str, default=None, help='Path to the project folder. Default is "/default/project/folder".')
+    parser.add_argument('--ak', type=str, default=None, help='Access key for git operations. Default is "your_access_key".')
+    parser.add_argument('--sr', type=bool, default=True, help='Indicates whether to keep running. Default is True.')
 
     args = parser.parse_args()
 
