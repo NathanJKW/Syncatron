@@ -50,7 +50,7 @@ def pull_repositories(access_token: str, directories: List[str]) -> List[str]:
             # Check if there were updates based on new_count
             updates_detected = False
             for fetch_info in result:
-                if fetch_info.new_count > 0:  # Check if there are new commits
+                if fetch_info.flags > 4:  # Check if there are new commits
                     updated_directories.append(directory)
                     updates_detected = True
                     break  # We found an update, no need to check further
