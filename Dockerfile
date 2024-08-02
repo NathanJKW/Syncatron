@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 RUN apt-get update && apt-get install -y git && apt-get clean
 # Copy the rest of the application code
-COPY src/ ./src/
+COPY . .
 
 # Set environment variables (optional)
 # ENV PROJECT_FOLDER=/path/to/project
@@ -22,4 +22,4 @@ COPY src/ ./src/
 # ENV RUN_FREQUENCY=5
 
 # Command to run the application using Python
-CMD ["python", "src/main.py"]
+CMD ["python", "syncatron.py"]
