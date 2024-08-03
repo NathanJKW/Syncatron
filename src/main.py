@@ -68,7 +68,7 @@ def main(should_run: bool = True, run_frequency: Optional[int] = None,
         scheduler_thread.start() 
         # Main loop that executes while should_run is set to True
         while should_run:       
-            time.sleep(10)
+            time.sleep(1000)
     except KeyboardInterrupt:
         # Signal to stop the scheduler thread on a keyboard interrupt
         logging.info("Program interrupted. Exiting gracefully.")

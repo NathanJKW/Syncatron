@@ -13,3 +13,5 @@ tests/test_main.py
 tests/test_telegram_handler.py
 tests/test_utils.py
 syncatron.py
+Dockerfile
+docker-compose.py
