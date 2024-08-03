@@ -65,7 +65,7 @@ def main(should_run: bool = True, run_frequency: Optional[int] = None,
     
 
     try:
-        scheduler_thread.start() 
+        #scheduler_thread.start() 
         # Main loop that executes while should_run is set to True
         while should_run:       
             time.sleep(1000)
